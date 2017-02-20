@@ -31,6 +31,8 @@ public class RsaEncryptionService {
     @Value("${encryption.enabled}")
     private String enabledString;
 
+    private boolean enabled;
+
     @Autowired
     ResourceLoader resourceLoader;
 
@@ -39,12 +41,15 @@ public class RsaEncryptionService {
     // Loads the public key from a file in resources.
     @PostConstruct
     public void init() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        LOG.info("Loading encryption public key");
-        ObjectInputStream inputStream = null;
-        Resource resource = resourceLoader.getResource("classpath:public_key.der");
-        LOG.info("Loading encryption public key.  The Resource is:" + resource.getFile().getAbsolutePath());
-        File publicKeyFile = resource.getFile();
-        publicKey = getPublicKey(publicKeyFile);
+        this.enabled = Boolean.parseBoolean(enabledString);
+        if(this.enabled) {
+            LOG.info("Loading encryption public key");
+            ObjectInputStream inputStream = null;
+            Resource resource = resourceLoader.getResource("classpath:public_key.der");
+            LOG.info("Loading encryption public key.  The Resource is:" + resource.getFile().getAbsolutePath());
+            File publicKeyFile = resource.getFile();
+            publicKey = getPublicKey(publicKeyFile);
+        }
     }
 
     public static PublicKey getPublicKey(File f) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
@@ -65,7 +70,6 @@ public class RsaEncryptionService {
     public String encryptIfEnabled(long number) { return encryptIfEnabled("" + number); }
 
     public String encryptIfEnabled(String text) {
-        boolean enabled = Boolean.parseBoolean(enabledString);
         // If encryption is not enabled, then don't actually encrypt the string.
         if(!enabled) return text;
         byte[] cipherText = null;

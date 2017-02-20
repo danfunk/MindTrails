@@ -1,0 +1,28 @@
+buildscript {
+    repositories {
+        maven { url "http://repo.spring.io/libs-snapshot" }
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:$project.ext.springBootVersion")
+    }
+}
+
+apply plugin: 'spring-boot'
+apply plugin: 'war'
+
+description = 'Example MindTrails Site'
+
+war {
+    baseName = 'example'
+    version =  '0.1.0'
+}
+
+configurations {
+    providedRuntime
+}
+
+dependencies {
+    compile project(':core')
+}
