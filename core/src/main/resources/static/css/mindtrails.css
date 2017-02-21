@@ -1,6 +1,7 @@
 @charset "UTF-8";
 /* CSS Document */
 
+/*  */
 body {font-family: 'Source Sans Pro', sans-serif; font-size:20px; box-sizing:border-box; background-color: #f6f5ea}
 .clear-both {clear:both;}
 
@@ -18,6 +19,32 @@ body {font-family: 'Source Sans Pro', sans-serif; font-size:20px; box-sizing:bor
 }
 }
 
+#header {
+    background: #27306A url(/images/bg-header.png) top left repeat-x;
+}
+
+.navbar {
+    background: transparent;
+    margin-bottom: 0px;
+    border:none;
+}
+
+.navbar-default .navbar-nav>li>a {
+    color: #5ECCDE;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: .6em;
+}
+
+.navbar-default .navbar-nav>li>a:hover {
+    color: whitesmoke;
+}
+
+.login button {
+    padding: 2px 20px;
+    font-size: 1em;
+    font-weight: 600;
+}
 
 .account-bar {
     background: #21336B;
@@ -220,9 +247,6 @@ div.sessionOverview table td {
     box-shadow:0 1px 3px #ccc;
     border:1px solid #ddd;
 }
-
-
-
 
 #pswd_info h4 {
     margin:0 0 10px 0;
