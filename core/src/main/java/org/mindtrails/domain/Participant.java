@@ -23,7 +23,7 @@ import java.util.*;
 @Entity
 @Table(name = "participant")
 @Data
-@EqualsAndHashCode(exclude={"emailLogs", "giftLogs", "SMSLogs", "passwordToken"})
+@EqualsAndHashCode(exclude={"emailLogs", "giftLogs", "SMSLogs", "validationToken"})
 public  class Participant implements UserDetails {
 
     private static final Logger LOG = LoggerFactory.getLogger(Participant.class);
@@ -45,9 +45,8 @@ public  class Participant implements UserDetails {
     protected boolean phoneReminders = true;
     protected String timezone;
     protected boolean active = true;
+    protected boolean phoneValidated = false;
     protected Date lastLoginDate;
-    @JsonIgnore
-    protected String randomToken;
     protected String theme = "blue";
     protected boolean over18;
     protected String reference; // The site the user came from when creating their account
@@ -56,7 +55,7 @@ public  class Participant implements UserDetails {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
-    protected PasswordToken passwordToken;
+    protected ValidationToken validationToken;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, targetEntity=BaseStudy.class)
     protected Study study;

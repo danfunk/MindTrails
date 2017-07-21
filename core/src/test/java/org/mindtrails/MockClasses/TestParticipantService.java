@@ -49,6 +49,11 @@ public class TestParticipantService implements ParticipantService {
     }
 
     @Override
+    public Participant findByPhone(String phone) {
+         return repository.findByPhone(phone);
+    }
+
+    @Override
     public boolean isEligible(HttpSession session) {
         return false;
     }

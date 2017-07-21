@@ -40,7 +40,7 @@ public interface ParticipantRepository extends JpaRepository<Participant, Long> 
     Page<Participant> search(@Param("search") String search, Pageable pageable);
 
 
-    @Query("SELECT p FROM Participant as p LEFT JOIN p.passwordToken t \n" +
+    @Query("SELECT p FROM Participant as p LEFT JOIN p.validationToken t \n" +
             "            where t.token = :token")
     Participant findByToken(@Param("token") String token);
 

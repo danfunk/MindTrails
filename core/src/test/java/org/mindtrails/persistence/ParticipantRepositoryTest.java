@@ -4,7 +4,7 @@ import org.mindtrails.Application;
 import org.mindtrails.domain.tracking.EmailLog;
 import org.mindtrails.domain.tracking.GiftLog;
 import org.mindtrails.domain.Participant;
-import org.mindtrails.domain.PasswordToken;
+import org.mindtrails.domain.ValidationToken;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -114,17 +114,17 @@ public class ParticipantRepositoryTest {
     public void testFindByToken() {
         Participant participant;
         Participant p, p2;
-        PasswordToken token;
+        ValidationToken token;
         String tokenString = "abcfedf";
 
         // Create a participant
         participant = new Participant("John", "john@x.com", false);
 
         // Create a token DAO object
-        token = new PasswordToken(participant, new Date(), tokenString);
+        token = new ValidationToken(participant, new Date(), tokenString);
 
         // Connect the two and save.
-        participant.setPasswordToken(token);
+        participant.setValidationToken(token);
         participantRepository.save(participant);
         participantRepository.flush();
 
@@ -132,7 +132,7 @@ public class ParticipantRepositoryTest {
         participant = participantRepository.findByToken(tokenString);
 
         Assert.assertNotNull(participant);
-        Assert.assertEquals(tokenString, participant.getPasswordToken().getToken());
+        Assert.assertEquals(tokenString, participant.getValidationToken().getToken());
         Assert.assertEquals("john@x.com", participant.getEmail());
     }
 

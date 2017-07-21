@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]>
+<html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]>
+<html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]>
+<html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!-->
+<html class="not-ie" lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--<![endif]-->
+<head th:include="fragment/common :: headerFragment"/>
+<body>
+<section id="header" class="clearfix" th:include="fragment/common :: topFragment"/>
+
+<section id="content" class="clearfix">
+    <div class="container sessionSection">
+        <div class="row">
+            <div class="col-md-4">
+                <img th:src="@{/images/map-0-orange.png}" alt="icon" class="icon-small-bg"/>
+            </div>
+            <div class="col-md-8 session">
+                <h1>Please enter your validation code:</h1>
+                <p>We will award you gift cards as you work your way through the study.  To do so
+                we need to confirm your phone number.  </p>
+                <p>Can't receive text messages?  Please contact us at <a href="mailto:studyteam@mindtrails.org">
+                    studyteam@mindtrails.org</a> and we will verify your number so you can participate.</p>
+                <p class="alert-error" th:if="${failed}">The code you entered is not valid.  Please try again.</p>
+                <form action="#" th:action="@{/account/validate}" method="post">
+                    <lable>MT-</lable><input type="text" name="code"/>
+                    <p><button>Next</button></p>
+                </form>
+                <p></p>
+                <p th:unless="${justSent}"><a href="/account/validate?reset=true">Please send me another code.</a></p>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<footer id="footer" class="clearfix" th:include="fragment/common :: footer"/>
+<section id="copyright" class="clearfix" th:include="fragment/common :: copyright"/>
+<div th:include="fragment/common :: scripts"/>
+
+</body>
+</html>

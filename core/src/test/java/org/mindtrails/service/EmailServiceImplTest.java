@@ -124,7 +124,7 @@ public class EmailServiceImplTest {
 
         Participant p = new Participant();
         p.setEmail(email);
-        p.setPasswordToken(new PasswordToken(p, new Date(), token));
+        p.setValidationToken(new ValidationToken(p, new Date(), token));
 
         emailService.sendPasswordReset(p);
 

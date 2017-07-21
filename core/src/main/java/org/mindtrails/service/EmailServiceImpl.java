@@ -167,7 +167,7 @@ public class EmailServiceImpl implements EmailService {
         email.setTo(participant.getEmail());
         email.setParticipant(participant);
 
-        ctx.setVariable("token", participant.getPasswordToken().getToken());
+        ctx.setVariable("token", participant.getValidationToken().getToken());
         sendEmail(email);
     }
 

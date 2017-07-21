@@ -14,6 +14,7 @@ import org.mindtrails.service.TangoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,11 +41,17 @@ public class SessionController extends BaseController {
     @Autowired private ExportService exportService;
     @Autowired private ParticipantService participantService;
 
+    @Value("${account.phoneValidation}")
+    private boolean validatePhone;
 
     @RequestMapping("")
     public String sessionHome(ModelMap model, Principal principal) throws Exception {
 
         Participant p = getParticipant(principal);
+
+        if(validatePhone && !p.isPhoneValidated())
+            return "redirect:account/validate";
+
         Study study = p.getStudy();
         Session session = study.getCurrentSession();
         Session last = study.getLastSession();

@@ -1,11 +1,13 @@
 package org.mindtrails.controller;
 
 import org.mindtrails.domain.Participant;
+import org.mindtrails.domain.ValidationToken;
 import org.mindtrails.domain.RestExceptions.MissingEligibilityException;
 import org.mindtrails.domain.forms.ParticipantCreate;
 import org.mindtrails.domain.forms.ParticipantUpdate;
 import org.mindtrails.domain.recaptcha.RecaptchaFormValidator;
 import org.mindtrails.service.ParticipantService;
+import org.mindtrails.service.TwilioService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,11 +45,20 @@ public class AccountController extends BaseController {
     @Value("${recaptcha.site-key}")
     private String recaptchaSiteKey;
 
+    /**
+     * Will force users to validate their phone number before creating an account.
+     */
+    @Value("${account.phoneValidation}")
+    private boolean validatePhone;
+
     @Autowired
     private RecaptchaFormValidator recaptchaFormValidator;
 
     @Autowired
     private ParticipantService participantService;
+
+    @Autowired
+    private TwilioService textSevice;
 
     /** This will assure that any form submissions for the participant Form
      * are validated for a proper recaptcha response.
@@ -67,7 +78,6 @@ public class AccountController extends BaseController {
         } else {
             return "redirect:/public/eligibility";
         }
-
     }
 
     @RequestMapping(value="create", method = RequestMethod.POST )
@@ -103,9 +113,47 @@ public class AccountController extends BaseController {
         Authentication auth = new UsernamePasswordAuthenticationToken( participantCreate.getEmail(), participantCreate.getPassword());
         SecurityContextHolder.getContext().setAuthentication(auth);
 
-        LOG.info("Participant authenticated.");
-        return "redirect:/account/theme";
+        if(validatePhone) {
+            return "redirect:/account/validate?reset=true";
+        } else {
+            LOG.info("Participant authenticated.");
+            return "redirect:/account/theme";
+        }
+
     }
+
+    @RequestMapping("validate")
+    public String showValidate(ModelMap model,
+                               Principal principal,
+                               @RequestParam(value = "reset", defaultValue = "false") boolean reset) {
+        if(reset) {
+            Participant participant = participantService.get(principal);
+            participant.setValidationToken(new ValidationToken(true));
+            participantService.save(participant);
+            model.addAttribute("justSent", true);
+            this.textSevice.sendMessage(
+                    "MT-" +
+                            participant.getValidationToken().getToken()
+                            + " is your MindTrails activation code.",
+                    participant);
+        }
+        return "account/validate";
+    }
+
+    @RequestMapping(value="validate", method = RequestMethod.POST)
+    public String confirmValidate(ModelMap model, String code, Principal principal) {
+        Participant p = participantService.get(principal);
+        if(p.getValidationToken().getToken().equals(code)) {
+            p.setPhoneValidated(true);
+            p.setValidationToken(null);
+        } else {
+            model.addAttribute("failed", true);
+            return("account/validate");
+        }
+        participantService.save(p);
+        return "redirect:/session";
+    }
+
 
     @RequestMapping
     public String showAccount(ModelMap model, Principal principal) {
@@ -188,7 +236,7 @@ public class AccountController extends BaseController {
         }
 
         participant.updatePassword(password); // save the password.
-        participant.setPasswordToken(null);  // clear out hte token so it can't be used again.
+        participant.setValidationToken(null);  // clear out hte token so it can't be used again.
         participant.setLastLoginDate(new Date()); // Set the last login date, as we will auto-login.
         participantService.save(participant);
         participantService.flush();

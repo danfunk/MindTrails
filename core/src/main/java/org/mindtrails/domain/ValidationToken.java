@@ -13,12 +13,13 @@ import java.util.Date;
  * User: dan
  * Date: 7/29/14
  * Time: 3:15 PM
- * A token used to reset a password.  Only effective for a day.  Should be only one per participant.
+ * A token used to reset a password or validate their account by text message.
+ * Only effective for a day.  Should be only one per participant.
  */
 @Entity
-@Table(name="password_token")
+@Table(name="validation_token")
 @Data
-public class PasswordToken {
+public class ValidationToken {
 
     private static final int TOKEN_LENGTH = 20;
 
@@ -34,12 +35,26 @@ public class PasswordToken {
     /**
      * Creates a new Password token with a random string and a date/time of right now.
      */
-    public PasswordToken() {
-        this.token = RandomStringUtils.randomAlphabetic(TOKEN_LENGTH);
+    public ValidationToken() {
+        this(false);
+    }
+
+    /**
+     * It's possible to create a random textable token as well that is just
+     * a six digit number.
+     * @param textable
+     */
+    public ValidationToken(boolean textable) {
+        if(textable) {
+            this.token = RandomStringUtils.randomNumeric(6);
+        } else {
+            this.token = RandomStringUtils.randomAlphabetic(TOKEN_LENGTH);
+        }
         this.dateCreated   = new Date();
     }
 
-    public PasswordToken(Participant p, Date dateCreated, String token) {
+
+    public ValidationToken(Participant p, Date dateCreated, String token) {
         this.participant = p;
         this.dateCreated = dateCreated;
         this.token = token;

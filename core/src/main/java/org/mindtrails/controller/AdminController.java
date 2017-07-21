@@ -2,7 +2,7 @@ package org.mindtrails.controller;
 
 import org.mindtrails.domain.Email;
 import org.mindtrails.domain.Participant;
-import org.mindtrails.domain.PasswordToken;
+import org.mindtrails.domain.ValidationToken;
 import org.mindtrails.domain.forms.ParticipantCreate;
 import org.mindtrails.domain.forms.ParticipantCreateAdmin;
 import org.mindtrails.domain.forms.ParticipantUpdateAdmin;
@@ -190,7 +190,7 @@ public class AdminController extends BaseController {
             Reward reward = tangoService.createGiftCard(p, "test", 1);  // This would actually award a gift card, if you need to do some testing.
             this.emailService.sendGiftCard(p, reward, 100);
         } else if(type.equals(EmailService.TYPE.resetPass.toString())) {
-            p.setPasswordToken(new PasswordToken());
+            p.setValidationToken(new ValidationToken());
             this.emailService.sendPasswordReset(p);
         } else if(type.equals(EmailService.TYPE.alertAdmin.toString())) {
             this.emailService.sendAdminEmail("Example", "This is an example alert message normally sent to the administrator with a custom subject and message");

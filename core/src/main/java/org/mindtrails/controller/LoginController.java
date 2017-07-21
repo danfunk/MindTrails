@@ -1,7 +1,7 @@
 package org.mindtrails.controller;
 
 import org.mindtrails.domain.Participant;
-import org.mindtrails.domain.PasswordToken;
+import org.mindtrails.domain.ValidationToken;
 import org.mindtrails.domain.forms.ParticipantCreate;
 import org.mindtrails.persistence.ParticipantRepository;
 import org.mindtrails.service.EmailService;
@@ -93,7 +93,7 @@ public class LoginController {
             return("resetPass");
         }
 
-        p.setPasswordToken(new PasswordToken());
+        p.setValidationToken(new ValidationToken());
         participantService.save(p);
 
         emailService.sendPasswordReset(p);
@@ -152,7 +152,7 @@ public class LoginController {
         }
 
         participant.updatePassword(password); // save the password.
-        participant.setPasswordToken(null);  // clear out hte token so it can't be used again.
+        participant.setValidationToken(null);  // clear out hte token so it can't be used again.
         participant.setLastLoginDate(new Date()); // Set the last login date, as we will auto-login.
         participantService.save(participant);
         participantService.flush();
