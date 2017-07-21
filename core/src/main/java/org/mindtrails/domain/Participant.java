@@ -36,6 +36,7 @@ public  class Participant implements UserDetails {
     protected String fullName;
     @Column(unique = true)
     protected String email;
+    @Column(unique = true)
     protected String phone;
     protected boolean admin;
     protected boolean testAccount;

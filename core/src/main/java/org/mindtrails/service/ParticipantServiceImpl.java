@@ -36,6 +36,11 @@ public abstract class ParticipantServiceImpl implements ParticipantService {
     }
 
     @Override
+    public Participant findByPhone(String phone) {
+        return participantRepository.findByPhone(phone);
+    }
+
+    @Override
     public void flush() {
         participantRepository.flush();
     }

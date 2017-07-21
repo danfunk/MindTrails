@@ -32,6 +32,10 @@ public interface ParticipantService {
      */
     Participant findByEmail(String email);
 
+    /** Returns a participant associated with the given phone number
+     */
+    Participant findByPhone(String phone);
+
     /**
      * Checks for eligibility - usually with a form
      * stored against the current users session

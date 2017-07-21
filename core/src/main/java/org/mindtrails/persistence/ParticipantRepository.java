@@ -28,6 +28,9 @@ import java.util.List;
 public interface ParticipantRepository extends JpaRepository<Participant, Long> {
 
     Participant findByEmail(String email);
+
+    Participant findByPhone(String phone);
+
     List<Participant> findByActiveAndPhoneReminders(boolean active, boolean phone);
 
     @Query(" select p from Participant as p" +
