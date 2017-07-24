@@ -146,11 +146,11 @@ public class AccountController extends BaseController {
         if(p.getValidationToken().getToken().equals(code)) {
             p.setPhoneValidated(true);
             p.setValidationToken(null);
-        } else {
+            participantService.save(p);
+v        } else {
             model.addAttribute("failed", true);
             return("account/validate");
         }
-        participantService.save(p);
         return "redirect:/session";
     }
 
